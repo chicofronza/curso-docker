@@ -1,0 +1,134 @@
+docker image pull
+docker container create
+docker container start
+
+Os comandos acima são a mesma coisa que docker container run
+
+docker container run hello-world -> cria um container de hello world pra testar a instalação
+bash --version
+docker container run debian bash --version
+
+docker container ps -> lista os containers somente em execução
+docker container ps -a ->lista tds oc ontainers
+
+doker container run --rm debian bash --version
+docker container run -it debian bash
+
+docker container run --name mychico -it debian bash
+docker container ls
+docker container ls -a
+
+docker container start -ai my chico
+touch curso-docker.txt
+ls
+exit
+
+docker container run -p 8080:80 nginx
+ 
+docker container run -p 8080:80 -v $(pwd)/not-found:usr/share/nginx/html nginx
+docker container run -d --name ex-daemon-basic -p 8080:80 -v $(pwd)/html:usr/share/nginx/html nginx
+
+docker container stop nome_container
+docker container start nome_container
+docker container restart nome_container
+docker container list
+docker container ps -a
+docker container ls -a
+docker container logs nome_container
+docker container inspect nome_container
+docker container exec nome_container uname - or ->mostra um JSON comtds as conf do container
+docher container exec nome_container uname -or ->mostra a versão linux do container
+
+docker container --help
+docker image help
+docker volume help
+
+docher image pull redis:latest
+docker image ls
+docker image inspect redis:latest
+docker image tag redis:latest tag_version
+docker image rm redis:latest tag_version
+
+7 comandos para gerenciamento de imagem
+docker image pull
+docker image ls
+docker image rm nome_da_tag
+docker image inspect nome_da_tag
+docker image tag redis:latest tag_version
+docker container build
+docker image push
+
+gerando imagem
+docker image build -t ex-simple-build .
+docker image ls
+docker container run -p 80:80 ex-simple-build
+
+docker image build -t ex-build-arg .
+docker container run ex-build-arg bash -c "echo $S3_BUCKET"
+docker image build --build-arg S3_BUCKET=myapp
+docker image build --build-arg S3_BUCKET=myapp -t ex-build-arg .
+docker image inspect --format="{{index .Config.Labels \"maintainer\"}}" ex-build-arg
+docker image build -t ex-build-copy .
+
+docker image build -t ex-build-dev .
+docker container run it -v $(pwd):/app -p 80:8000 --name python-server ex-build-dev
+
+docker image tag ex-simple-build dockercod3er-simple-build:1.0
+docker login --username=chicofronza
+docker image push dockercod3er-simple-build:1.0
+
+docker network ls -> lista os modelos de rede do docker
+
+tipos de rede docker
+-None network -> nenhuma rede de acesso fora da máquina
+-Bridge network(Padrão) -> ponte entre a interface de rede do docker e o host
+-Host network -> remove a acamada bridge e acessa diretamente a interface da maquina
+-Overlay network -> disponivel só para cluster de containers
+
+docker container run -d --net none debian
+
+docker network inspect bridge -> inspeciona as conf de rede
+
+******Criar 2 containers e fazer a comunicação de rede entre eles**************************
+docker container run -d --name container1 alpine sleep 1000
+docker container exec -it container1 if config 
+
+docker container run -d --name container2 alpine sleep 1000
+docker container exec -it container2 if config 
+
+docker container exec -it container1 ping 172.17.0.3
+******************************************************************************************
+
+****************criar nova rede************************************************************
+docker network create --driver bridge rede_nova
+
+docker container run -d --net none debian
+docker network inspect bridge -> inspeciona as conf de rede
+
+docker container run -d --name container3 --net rede_nova alpine sleep 1000
+docker container exec -it container1 ping 172.17.0.2
+
+docker network connect bridge container3
+docker container exec -it container3 if config 
+docker container exec -it container1 ping 172.17.0.2
+
+docker network disconnect bridge container3
+docker container exec -it container3 if config 
+*****************************************************************************************
+
+Compose
+
+docker-compose up -d ->sobe o container em modo daemon
+docker-compose ps ->visualizar processos em execução
+docker-compose exec db psql -U postgres -c '\l' ->lista tds os databases
+docker-compose down ->remove o container e para o serviço
+docker-compose exec db psql -U postgres -d email_sender -c 'select * from emails' ->executa um selecet no container
+docker-compose logs -f -t
+
+docker-compose up -d --scale worker=3 ->escala 3 serviços de worker
+
+
+ 
+
+
+
